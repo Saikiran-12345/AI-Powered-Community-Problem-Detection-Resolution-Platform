@@ -20,10 +20,17 @@ export const Login = () => {
     try {
       await login(targetEmail);
       const user = JSON.parse(localStorage.getItem('civicai_current_user') || '{}');
-      if (from) navigate(from, { replace: true });
-      else if (user.role === 'ADMIN') navigate('/admin/dashboard');
-      else if (user.role === 'OFFICER') navigate('/officer/dashboard');
-      else navigate('/citizen/dashboard');
+if (from) {
+        // Prevent cross-role routing traps (e.g. logging out as Officer, then logging in as Admin, being sent back to /officer)
+        if (user.role === 'ADMIN' && !from.startsWith('/admin')) navigate('/admin/dashboard');
+        else if (user.role === 'OFFICER' && !from.startsWith('/officer')) navigate('/officer/dashboard');
+        else if (user.role === 'CITIZEN' && !from.startsWith('/citizen')) navigate('/citizen/dashboard');
+        else navigate(from, { replace: true });
+      } else {
+        if (user.role === 'ADMIN') navigate('/admin/dashboard');
+        else if (user.role === 'OFFICER') navigate('/officer/dashboard');
+        else navigate('/citizen/dashboard');
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to login');
     } finally {
