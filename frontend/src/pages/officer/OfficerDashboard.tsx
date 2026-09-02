@@ -14,7 +14,7 @@ export const OfficerDashboard = () => {
     // In a real app, filter by department. Here we just grab active items.
     const all = complaintService.getAll();
     setQueue(all.filter(c => !['RESOLVED', 'CITIZEN_CONFIRMED', 'REJECTED'].includes(c.status))
-                 .sort((a, b) => (b.aiAnalysis?.priorityScore || 0) - (a.aiAnalysis?.priorityScore || 0)));
+                 .sort((a, b) => (b.aiAnalysis?.priorityScore || 0) - (a.aiAnalysis?.priorityScore || 0)).slice(0, 30));
   }, []);
 
   const highPriorityCount = queue.filter(c => c.aiAnalysis?.priorityScore && c.aiAnalysis.priorityScore >= 8).length;
@@ -74,7 +74,7 @@ export const OfficerDashboard = () => {
                         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">AI Score</p>
                         <p className="text-xl font-extrabold text-gray-900">{c.aiAnalysis?.priorityScore?.toFixed(1) || '--'}</p>
                      </div>
-                     <button onClick={() => navigate(`/officer/investigate/${c.id}`)} className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-800">
+                     <button onClick={() => navigate(`/officer/investigate/${c.id}`)} className="bg-gray-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-gray-800 active:scale-95 transition-all">
                        Investigate
                      </button>
                    </div>
