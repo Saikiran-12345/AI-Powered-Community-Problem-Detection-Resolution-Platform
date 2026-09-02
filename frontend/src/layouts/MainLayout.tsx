@@ -62,7 +62,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
                </button>
              )}
 
-             <button onClick={() => navigate(`/${role.toLowerCase()}/dashboard`)} className={navItemClass('complaints')}>
+             <button onClick={() => navigate(`/${role.toLowerCase()}/complaints`)} className={navItemClass('complaints')}>
                 <FileText className="w-4 h-4" /> Complaints Log
              </button>
 
