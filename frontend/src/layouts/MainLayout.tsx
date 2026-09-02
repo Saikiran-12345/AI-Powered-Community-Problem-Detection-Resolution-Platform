@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogOut, LayoutDashboard, FileText, BarChart3, Settings, PlusCircle, Building2 } from 'lucide-react';
+import { LogOut, LayoutDashboard, FileText, BarChart3, Settings, PlusCircle, Building2, Users } from 'lucide-react';
 
 interface MainLayoutProps {
   role: 'CITIZEN' | 'OFFICER' | 'ADMIN';
@@ -73,9 +73,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
              )}
 
              {role === 'ADMIN' && (
-               <button onClick={() => alert('Settings module coming soon')} className={navItemClass('settings')}>
-                  <Settings className="w-4 h-4" /> System Settings
-               </button>
+               <>
+                 <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">Administration</div>
+                 <button onClick={() => navigate('/admin/users')} className={navItemClass('users')}>
+                    <Users className="w-4 h-4" /> User Management
+                 </button>
+                 <button onClick={() => navigate('/admin/settings')} className={navItemClass('settings')}>
+                    <Settings className="w-4 h-4" /> System Settings
+                 </button>
+               </>
              )}
           </nav>
           

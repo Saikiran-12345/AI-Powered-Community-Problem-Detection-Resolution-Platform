@@ -19,6 +19,8 @@ import { Investigation } from './pages/officer/Investigation';
 
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AnalyticsDashboard } from './pages/admin/AnalyticsDashboard';
+import { UserManagement } from './pages/admin/UserManagement';
+import { SystemSettings } from './pages/admin/SystemSettings';
 
 const Landing = () => <Navigate to="/login" replace />;
 const NotFound = () => <div className="p-8 text-center font-bold text-2xl text-gray-900 mt-20">404 - Area Not Found</div>;
@@ -47,6 +49,8 @@ function App() {
             <Route path="dashboard" element={<OfficerDashboard />} />
             <Route path="complaints" element={<OfficerComplaintsLog />} />
             <Route path="analytics" element={<AnalyticsDashboard />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="settings" element={<SystemSettings />} />
             <Route path="investigate/:id" element={<Investigation />} />
           </Route>
 
@@ -55,6 +59,8 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="complaints" element={<OfficerComplaintsLog />} />
             <Route path="analytics" element={<AnalyticsDashboard />} />
+            <Route path="users" element={<UserManagement />} />
+            <Route path="settings" element={<SystemSettings />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
