@@ -27,25 +27,25 @@ export const Register = () => {
   };
 
   return (
-    <div className="p-8 md:p-12">
-      <div className="flex justify-center mb-8">
-        <div className="bg-primary-50 p-4 rounded-2xl">
-          <Building2 className="w-10 h-10 text-primary-600" />
+    <div className="p-6 sm:p-8">
+      <div className="flex justify-center mb-6">
+        <div className="bg-primary-50 p-3 rounded-2xl">
+          <Building2 className="w-8 h-8 text-primary-600" />
         </div>
       </div>
       
-      <div className="text-center mb-10">
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-2">Create an Account</h1>
+      <div className="text-center mb-6">
+        <h1 className="text-xl font-bold text-gray-900 tracking-tight mb-2">Create an Account</h1>
         <p className="text-gray-500 text-sm">Join your community to report and track local infrastructure issues.</p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
+        <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
           <div className="relative">
@@ -55,7 +55,7 @@ export const Register = () => {
               type="text" 
               value={name}
               onChange={e => setName(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none text-gray-900"
+              className="w-full pl-12 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none text-gray-900"
               placeholder="Jane Doe"
             />
           </div>
@@ -70,7 +70,7 @@ export const Register = () => {
               type="email" 
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none text-gray-900"
+              className="w-full pl-12 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none text-gray-900"
               placeholder="name@example.com"
             />
           </div>
@@ -79,13 +79,13 @@ export const Register = () => {
         <button 
           type="submit" 
           disabled={isSubmitting}
-          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3.5 rounded-xl transition-colors flex items-center justify-center gap-2 mt-4 shadow-lg shadow-primary-600/20"
+          className="w-full bg-primary-600 hover:bg-primary-700 text-white font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 mt-4 shadow-lg shadow-primary-600/20"
         >
           {isSubmitting ? 'Creating Account...' : <>Create Citizen Account <ArrowRight className="w-4 h-4" /></>}
         </button>
       </form>
 
-      <div className="mt-8 text-center">
+      <div className="mt-6 text-center">
         <p className="text-sm text-gray-500">
           Already have an account? <Link to="/login" className="text-gray-900 font-semibold hover:underline">Sign in</Link>
         </p>
