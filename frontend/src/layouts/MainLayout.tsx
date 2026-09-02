@@ -19,38 +19,42 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
 
   const navItemClass = (path: string) => {
     const isActive = location.pathname.includes(path);
-    return `w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all ${
+    return `w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
       isActive 
-        ? 'bg-primary-50 text-primary-700 shadow-sm border border-primary-100' 
-        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+        ? 'bg-primary-600 text-white shadow-md shadow-primary-500/20 translate-x-1' 
+        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-transparent hover:translate-x-1'
     }`;
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
-      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-md">
+    <div className="min-h-screen flex flex-col font-sans text-slate-900 bg-slate-100 selection:bg-primary-200 selection:text-primary-900">
+      
+      {/* Sleek Dark Header */}
+      <header className="bg-[#0B1120] border-b border-slate-800/80 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-xl shadow-slate-900/5 backdrop-blur-md">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary-500/30 border border-primary-400/20">
             <Building2 className="w-5 h-5" />
           </div>
-          <span className="text-xl font-extrabold text-white tracking-tight">CivicAI</span>
+          <span className="text-xl font-extrabold text-white tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">CivicAI</span>
         </div>
         
         <div className="flex items-center gap-5">
           <div className="hidden md:block text-right">
-            <p className="text-sm font-bold text-white">{user?.name}</p>
-            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{role}</p>
+            <p className="text-sm font-bold text-slate-100">{user?.name}</p>
+            <p className="text-[10px] font-bold text-primary-400 uppercase tracking-widest">{role}</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-white font-bold overflow-hidden ring-2 ring-slate-900 shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-700 flex items-center justify-center text-white font-bold overflow-hidden shadow-sm hover:border-primary-500 transition-colors cursor-pointer">
              {user?.name?.charAt(0).toUpperCase()}
           </div>
         </div>
       </header>
       
       <div className="flex-1 flex overflow-hidden">
-        <aside className="w-64 bg-white border-r border-slate-200 p-5 hidden md:flex flex-col overflow-y-auto shadow-sm relative z-10">
-          <nav className="flex-1 space-y-2">
-             <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Main Menu</div>
+        
+        {/* Glassmorphic Sidebar */}
+        <aside className="w-64 bg-white/70 backdrop-blur-xl border-r border-slate-200 p-5 hidden md:flex flex-col overflow-y-auto shadow-[4px_0_24px_rgba(0,0,0,0.02)] relative z-10">
+          <nav className="flex-1 space-y-2 mt-2">
+             <div className="px-3 py-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2">Main Menu</div>
              
              <button onClick={() => navigate(`/${role.toLowerCase()}/dashboard`)} className={navItemClass('dashboard')}>
                 <LayoutDashboard className="w-4 h-4" /> Dashboard
@@ -74,7 +78,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
 
              {role === 'ADMIN' && (
                <>
-                 <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mt-6 mb-2">Administration</div>
+                 <div className="px-3 py-2 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mt-8 mb-2">Administration</div>
                  <button onClick={() => navigate('/admin/users')} className={navItemClass('users')}>
                     <Users className="w-4 h-4" /> User Management
                  </button>
@@ -85,15 +89,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
              )}
           </nav>
           
-          <div className="pt-4 border-t border-gray-100 mt-auto">
-            <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-semibold text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100">
+          <div className="pt-6 border-t border-slate-200/60 mt-auto">
+            <button onClick={handleLogout} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-bold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100">
               <LogOut className="w-4 h-4" /> Sign Out
             </button>
           </div>
         </aside>
         
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-slate-50">
-          <div className="max-w-7xl mx-auto">
+        {/* Beautiful Gradient Background for Main Canvas */}
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto relative bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-50/60 via-slate-100 to-slate-200/80">
+          
+          {/* Subtle decorative background blur elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary-400/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-400/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+          <div className="max-w-7xl mx-auto relative z-0">
             <Outlet />
           </div>
         </main>
