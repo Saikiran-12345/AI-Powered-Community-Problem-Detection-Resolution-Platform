@@ -1,33 +1,79 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { complaintService } from '../../services/complaintService';
 import type { Complaint } from '../../types/complaints';
-import { FileText, Search, Filter } from 'lucide-react';
+import { FileText, Search, Filter, ArrowUpDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+
+type SortField = 'id' | 'date' | 'title' | 'status' | 'priority';
+type SortDirection = 'asc' | 'desc';
 
 export const OfficerComplaintsLog = () => {
   const [complaints, setComplaints] = useState<Complaint[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<SortField>('priority');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const navigate = useNavigate();
 
   useEffect(() => {
     try {
       const all = complaintService.getAll() || [];
-      const sorted = all.sort((a, b) => {
-        const timeA = a.dateReported ? new Date(a.dateReported).getTime() : 0;
-        const timeB = b.dateReported ? new Date(b.dateReported).getTime() : 0;
-        return (timeB || 0) - (timeA || 0);
-      });
-      setComplaints(sorted.slice(0, 100)); // limit to 100 to prevent lag
+      setComplaints(all.slice(0, 150)); // Load top 150 for performance
     } catch (e) {
       console.error("Failed to load complaints:", e);
       setComplaints([]);
     }
   }, []);
 
-  const filteredComplaints = complaints.filter(c => 
-    (c.title || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (c.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (c.category || '').toLowerCase().includes(searchTerm.toLowerCase())
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc'); // Default to descending for new sorts
+    }
+  };
+
+  const processedComplaints = useMemo(() => {
+    // Filter
+    const filtered = complaints.filter(c => 
+      (c.title || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+      (c.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (c.category || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Sort
+    return filtered.sort((a, b) => {
+      let comparison = 0;
+      if (sortField === 'id') {
+        comparison = (a.id || '').localeCompare(b.id || '');
+      } else if (sortField === 'date') {
+        const timeA = a.dateReported ? new Date(a.dateReported).getTime() : 0;
+        const timeB = b.dateReported ? new Date(b.dateReported).getTime() : 0;
+        comparison = timeA - timeB;
+      } else if (sortField === 'title') {
+        comparison = (a.title || '').localeCompare(b.title || '');
+      } else if (sortField === 'status') {
+        comparison = (a.status || '').localeCompare(b.status || '');
+      } else if (sortField === 'priority') {
+        const pA = a.aiAnalysis?.priorityScore || 0;
+        const pB = b.aiAnalysis?.priorityScore || 0;
+        comparison = pA - pB;
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+  }, [complaints, searchTerm, sortField, sortDirection]);
+
+  const Th = ({ field, label }: { field: SortField, label: string }) => (
+    <th 
+      onClick={() => handleSort(field)} 
+      className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors select-none"
+    >
+      <div className="flex items-center gap-1.5">
+        {label}
+        <ArrowUpDown className={`w-3 h-3 ${sortField === field ? 'text-primary-600' : 'text-gray-300'}`} />
+      </div>
+    </th>
   );
 
   return (
@@ -59,24 +105,24 @@ export const OfficerComplaintsLog = () => {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">ID</th>
-                <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Title & Category</th>
-                <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider">Priority</th>
+                <Th field="id" label="ID" />
+                <Th field="date" label="Date" />
+                <Th field="title" label="Title & Category" />
+                <Th field="status" label="Status" />
+                <Th field="priority" label="Priority" />
                 <th className="py-3 px-6 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {filteredComplaints.length === 0 ? (
+              {processedComplaints.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-gray-500 font-medium">
                     <FileText className="w-8 h-8 text-gray-300 mx-auto mb-3" />
-                    No complaints found matching your search.
+                    No complaints found matching your criteria.
                   </td>
                 </tr>
               ) : (
-                filteredComplaints.map(c => (
+                processedComplaints.map(c => (
                   <tr key={c.id || Math.random().toString()} className="hover:bg-gray-50 transition-colors group">
                     <td className="py-4 px-6 text-sm font-bold text-gray-900">{c.id || 'N/A'}</td>
                     <td className="py-4 px-6 text-sm text-gray-500">
@@ -104,7 +150,7 @@ export const OfficerComplaintsLog = () => {
                               style={{ width: `${(c.aiAnalysis.priorityScore / 10) * 100}%` }}
                             />
                           </div>
-                          <span className="text-xs font-bold text-gray-700">{c.aiAnalysis.priorityScore}/10</span>
+                          <span className="text-xs font-bold text-gray-700">{c.aiAnalysis.priorityScore.toFixed(1)}/10</span>
                         </div>
                       ) : (
                         <span className="text-xs text-gray-400 font-medium">Pending</span>
