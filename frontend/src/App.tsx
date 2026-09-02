@@ -16,9 +16,10 @@ import { ReportProblem } from './pages/citizen/ReportProblem';
 import { OfficerDashboard } from './pages/officer/OfficerDashboard';
 import { Investigation } from './pages/officer/Investigation';
 
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+
 const Landing = () => <Navigate to="/login" replace />;
-const AdminDashboard = () => <div className="p-8">Command Center Placeholder</div>;
-const NotFound = () => <div className="p-8 text-center font-bold">404 - Page Not Found</div>;
+const NotFound = () => <div className="p-8 text-center font-bold text-2xl text-gray-900 mt-20">404 - Area Not Found</div>;
 
 function App() {
   return (
