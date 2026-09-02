@@ -13,8 +13,10 @@ import { Unauthorized } from './pages/auth/Unauthorized';
 import { CitizenDashboard } from './pages/citizen/CitizenDashboard';
 import { ReportProblem } from './pages/citizen/ReportProblem';
 
+import { OfficerDashboard } from './pages/officer/OfficerDashboard';
+import { Investigation } from './pages/officer/Investigation';
+
 const Landing = () => <Navigate to="/login" replace />;
-const OfficerDashboard = () => <div className="p-8">Operations Dashboard Placeholder</div>;
 const AdminDashboard = () => <div className="p-8">Command Center Placeholder</div>;
 const NotFound = () => <div className="p-8 text-center font-bold">404 - Page Not Found</div>;
 
@@ -40,6 +42,7 @@ function App() {
           <Route path="/officer" element={<ProtectedRoute allowedRoles={['OFFICER', 'ADMIN']}><MainLayout role="OFFICER" /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<OfficerDashboard />} />
+            <Route path="investigate/:id" element={<Investigation />} />
           </Route>
 
           <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><MainLayout role="ADMIN" /></ProtectedRoute>}>
