@@ -10,10 +10,16 @@ export const CitizenDashboard = () => {
   const navigate = useNavigate();
   const [complaints, setComplaints] = useState<Complaint[]>([]);
 
-  useEffect(() => {
+  const loadData = () => {
     if (user) {
       setComplaints(complaintService.getByCitizen(user.id));
     }
+  };
+
+  useEffect(() => {
+    loadData();
+    window.addEventListener('storage', loadData);
+    return () => window.removeEventListener('storage', loadData);
   }, [user]);
 
   const stats = {
@@ -31,7 +37,7 @@ export const CitizenDashboard = () => {
         </div>
         <button 
           onClick={() => navigate('/citizen/report')}
-          className="bg-primary-600 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-primary-700 transition-colors shadow-sm"
+          className="bg-primary-600 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 hover:bg-primary-700 transition-colors shadow-sm active:scale-95"
         >
           <Plus className="w-5 h-5" /> Report Issue
         </button>
@@ -75,13 +81,13 @@ export const CitizenDashboard = () => {
                <button onClick={() => navigate('/citizen/report')} className="text-primary-600 font-semibold text-sm hover:underline">Report your first issue</button>
              </div>
           ) : (
-             complaints.slice(0, 5).map(c => (
+             complaints.sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime()).slice(0, 5).map(c => (
                <div key={c.id} className="p-6 hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/citizen/complaints/${c.id}`)}>
                  <div className="flex items-start justify-between">
                    <div>
                      <div className="flex items-center gap-3 mb-1">
                        <span className="text-xs font-bold text-gray-500">{c.id}</span>
-                       <span className="px-2.5 py-1 text-[10px] font-bold rounded-full bg-blue-50 text-blue-700">{c.status.replace('_', ' ')}</span>
+                       <span className={`px-2.5 py-1 text-[10px] font-bold rounded-full ${c.status === 'RESOLVED' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'}`}>{c.status.replace(/_/g, ' ')}</span>
                      </div>
                      <h3 className="font-semibold text-gray-900">{c.title}</h3>
                      <p className="text-sm text-gray-500 flex items-center gap-1 mt-1"><MapPin className="w-4 h-4"/> {c.location}</p>

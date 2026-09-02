@@ -2,19 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { complaintService } from '../../services/complaintService';
 import type { Complaint } from '../../types/complaints';
-import { ClipboardList, Flame, MapPin, Activity } from 'lucide-react';
+import { ClipboardList, Flame, MapPin, Activity, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export const OfficerDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [queue, setQueue] = useState<Complaint[]>([]);
+  const [resolvedCount, setResolvedCount] = useState(0);
 
-  useEffect(() => {
-    // In a real app, filter by department. Here we just grab active items.
+  const loadData = () => {
     const all = complaintService.getAll();
     setQueue(all.filter(c => !['RESOLVED', 'CITIZEN_CONFIRMED', 'REJECTED'].includes(c.status))
                  .sort((a, b) => (b.aiAnalysis?.priorityScore || 0) - (a.aiAnalysis?.priorityScore || 0)).slice(0, 30));
+    
+    setResolvedCount(all.filter(c => ['RESOLVED', 'CITIZEN_CONFIRMED'].includes(c.status)).length);
+  };
+
+  useEffect(() => {
+    loadData();
+    window.addEventListener('storage', loadData);
+    return () => window.removeEventListener('storage', loadData);
   }, []);
 
   const highPriorityCount = queue.filter(c => c.aiAnalysis?.priorityScore && c.aiAnalysis.priorityScore >= 8).length;
@@ -29,21 +37,33 @@ export const OfficerDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-           <div className="flex items-center gap-3 mb-2 text-gray-500"><ClipboardList className="w-5 h-5"/> <span className="text-xs font-bold uppercase">Active Queue</span></div>
-           <p className="text-3xl font-extrabold text-gray-900">{queue.length}</p>
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+           <div className="p-3 bg-blue-50 rounded-xl text-blue-600"><ClipboardList className="w-6 h-6"/></div>
+           <div>
+             <p className="text-3xl font-extrabold text-gray-900">{queue.length}</p>
+             <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Active Queue</p>
+           </div>
         </div>
-        <div className="bg-red-50 p-5 rounded-2xl border border-red-100 shadow-sm">
-           <div className="flex items-center gap-3 mb-2 text-red-500"><Flame className="w-5 h-5"/> <span className="text-xs font-bold uppercase">Critical Priority</span></div>
-           <p className="text-3xl font-extrabold text-red-700">{highPriorityCount}</p>
+        <div className="bg-red-50 p-5 rounded-2xl border border-red-100 shadow-sm flex items-center gap-4">
+           <div className="p-3 bg-red-100 rounded-xl text-red-700"><Flame className="w-6 h-6"/></div>
+           <div>
+             <p className="text-3xl font-extrabold text-red-700">{highPriorityCount}</p>
+             <p className="text-xs font-bold uppercase tracking-wider text-red-600">Critical Priority</p>
+           </div>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-           <div className="flex items-center gap-3 mb-2 text-gray-500"><Activity className="w-5 h-5"/> <span className="text-xs font-bold uppercase">Avg Resolution</span></div>
-           <p className="text-3xl font-extrabold text-gray-900">2.4<span className="text-sm font-medium text-gray-500 ml-1">days</span></p>
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+           <div className="p-3 bg-green-50 rounded-xl text-green-600"><CheckCircle className="w-6 h-6"/></div>
+           <div>
+             <p className="text-3xl font-extrabold text-gray-900">{resolvedCount}</p>
+             <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Total Resolved</p>
+           </div>
         </div>
-        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-           <div className="flex items-center gap-3 mb-2 text-gray-500"><MapPin className="w-5 h-5"/> <span className="text-xs font-bold uppercase">Hotspots</span></div>
-           <p className="text-3xl font-extrabold text-gray-900">3</p>
+        <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+           <div className="p-3 bg-gray-50 rounded-xl text-gray-600"><MapPin className="w-6 h-6"/></div>
+           <div>
+             <p className="text-3xl font-extrabold text-gray-900">12</p>
+             <p className="text-xs font-bold uppercase tracking-wider text-gray-500">Active Sectors</p>
+           </div>
         </div>
       </div>
 
