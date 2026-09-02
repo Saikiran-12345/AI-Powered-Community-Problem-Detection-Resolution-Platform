@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldCheck, Mail, Lock, ArrowRight, Building2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Building2 } from 'lucide-react';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('password');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
@@ -13,14 +14,11 @@ export const Login = () => {
 
   const from = (location.state as any)?.from?.pathname;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const performLogin = async (targetEmail: string) => {
     setError('');
     setIsSubmitting(true);
-    
     try {
-      await login(email);
-      // Auto route based on role if no 'from' state
+      await login(targetEmail);
       const user = JSON.parse(localStorage.getItem('civicai_current_user') || '{}');
       if (from) navigate(from, { replace: true });
       else if (user.role === 'ADMIN') navigate('/admin/dashboard');
@@ -33,7 +31,15 @@ export const Login = () => {
     }
   };
 
-  const fillDemo = (demoEmail: string) => setEmail(demoEmail);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    performLogin(email);
+  };
+
+  const fillDemo = (demoEmail: string) => {
+    setEmail(demoEmail);
+    performLogin(demoEmail);
+  };
 
   return (
     <div className="p-6 sm:p-8">
@@ -49,7 +55,7 @@ export const Login = () => {
       </div>
 
       {error && (
-        <div className="mb-6 p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
+        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
           {error}
         </div>
       )}
@@ -77,7 +83,8 @@ export const Login = () => {
             <input 
               required 
               type="password" 
-              defaultValue="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               className="w-full pl-12 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all outline-none text-gray-900"
               placeholder="••••••••"
             />
@@ -88,7 +95,7 @@ export const Login = () => {
         <button 
           type="submit" 
           disabled={isSubmitting}
-          className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2 mt-4"
+          className="w-full bg-gray-900 hover:bg-gray-800 active:scale-95 text-white font-semibold py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 mt-4"
         >
           {isSubmitting ? 'Authenticating...' : <>Secure Sign In <ArrowRight className="w-4 h-4" /></>}
         </button>
@@ -101,11 +108,11 @@ export const Login = () => {
       </div>
 
       <div className="mt-6 pt-5 border-t border-gray-100">
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider text-center mb-4">Quick Demo Access</p>
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider text-center mb-4">1-Click Demo Login</p>
         <div className="grid grid-cols-3 gap-3">
-          <button onClick={() => fillDemo('citizen@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200">Citizen</button>
-          <button onClick={() => fillDemo('officer@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200">Officer</button>
-          <button onClick={() => fillDemo('admin@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200">Admin</button>
+          <button type="button" onClick={() => fillDemo('citizen@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200 active:scale-95">Citizen</button>
+          <button type="button" onClick={() => fillDemo('officer@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200 active:scale-95">Officer</button>
+          <button type="button" onClick={() => fillDemo('admin@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200 active:scale-95">Admin</button>
         </div>
       </div>
     </div>
