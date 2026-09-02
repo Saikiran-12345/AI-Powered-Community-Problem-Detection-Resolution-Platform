@@ -6,17 +6,23 @@ const CURRENT_USER_KEY = 'civicai_current_user';
 export const authService = {
   initDb: () => {
     const existing = localStorage.getItem(USERS_KEY);
-    if (!existing) {
-      // Seed default accounts
-      const defaultUsers: User[] = [
-        { id: 'u1', name: 'System Admin', email: 'admin@civic.local', role: 'ADMIN', createdAt: new Date().toISOString(), isActive: true },
-        { id: 'u2', name: 'Officer Smith', email: 'officer@civic.local', role: 'OFFICER', departmentId: 'd1', createdAt: new Date().toISOString(), isActive: true },
-        { id: 'u3', name: 'John Doe', email: 'citizen@civic.local', role: 'CITIZEN', createdAt: new Date().toISOString(), isActive: true }
-      ];
-      localStorage.setItem(USERS_KEY, JSON.stringify(defaultUsers));
-    }
+    let users = existing ? JSON.parse(existing) : [];
+    
+    // Ensure critical demo accounts exist
+    const ensureUser = (id, name, email, role) => {
+      if (!users.find(u => u.email === email)) {
+        users.push({ id, name, email, role, createdAt: new Date().toISOString(), isActive: true });
+      }
+    };
+    
+    ensureUser('u1', 'System Admin', 'admin@civic.local', 'ADMIN');
+    ensureUser('u2', 'Officer Smith', 'officer@civic.local', 'OFFICER');
+    ensureUser('u3', 'John Doe', 'citizen@civic.local', 'CITIZEN');
+    
+    localStorage.setItem(USERS_KEY, JSON.stringify(users));
   },
 
+  
   login: async (email: string): Promise<User> => {
     // Simulate network delay
     await new Promise(r => setTimeout(r, 600));
