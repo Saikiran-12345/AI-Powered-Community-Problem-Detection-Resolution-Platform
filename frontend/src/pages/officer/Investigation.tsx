@@ -23,8 +23,7 @@ export const Investigation = () => {
   }, [id]);
 
   const handleUpdate = () => {
-    // In real app, update via service
-    alert(`Status updated to ${status}. Notes saved.`);
+    complaintService.updateStatusAndNotes(id as string, status, notes);
     navigate('/officer/dashboard');
   };
 

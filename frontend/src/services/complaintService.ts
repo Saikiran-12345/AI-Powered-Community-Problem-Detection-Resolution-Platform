@@ -24,6 +24,18 @@ export const complaintService = {
     return newComplaint;
   },
   
+
+  updateStatusAndNotes: (id: string, status: string, notes: string) => {
+    const complaints = complaintService.getAll();
+    const idx = complaints.findIndex(c => c.id === id);
+    if(idx !== -1) {
+       complaints[idx].status = status as any;
+       // We can store notes on the complaint object if we add it to the type, 
+       // but updating status is the critical part to remove it from the active queue.
+       localStorage.setItem(COMPLAINTS_KEY, JSON.stringify(complaints));
+    }
+  },
+
   updateAnalysis: (id: string, analysis: any) => {
     const complaints = complaintService.getAll();
     const idx = complaints.findIndex(c => c.id === id);
