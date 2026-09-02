@@ -9,10 +9,13 @@ export const CitizenDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [complaints, setComplaints] = useState<Complaint[]>([]);
+  const [communityFixes, setCommunityFixes] = useState<Complaint[]>([]);
 
   const loadData = () => {
     if (user) {
       setComplaints(complaintService.getByCitizen(user.id));
+      const all = complaintService.getAll();
+      setCommunityFixes(all.filter(c => c.status === 'RESOLVED' && c.citizenId !== user.id));
     }
   };
 
@@ -100,7 +103,37 @@ export const CitizenDashboard = () => {
              ))
           )}
         </div>
+
+      </div>
+
+      <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100 shadow-sm overflow-hidden mt-8">
+        <div className="px-6 py-5 border-b border-green-100/50 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-green-900 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5" /> Recent Community Fixes
+          </h2>
+          <span className="text-xs font-bold text-green-700 bg-green-200/50 px-3 py-1 rounded-full uppercase tracking-wider">Public Feed</span>
+        </div>
+        <div className="divide-y divide-green-100/50">
+          {communityFixes.length === 0 ? (
+             <div className="p-8 text-center text-green-700 font-medium">No recent community fixes to show.</div>
+          ) : (
+             communityFixes.sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime()).slice(0, 3).map(c => (
+               <div key={c.id} className="p-6 bg-white/40 hover:bg-white/60 transition-colors">
+                 <div className="flex items-start justify-between">
+                   <div>
+                     <h3 className="font-bold text-gray-900">{c.title}</h3>
+                     <p className="text-sm text-green-800 flex items-center gap-1 mt-1 font-medium"><MapPin className="w-4 h-4"/> {c.location}</p>
+                   </div>
+                   <div className="text-right">
+                     <span className="px-2.5 py-1 text-[10px] font-bold rounded-full bg-green-200 text-green-800">RESOLVED</span>
+                   </div>
+                 </div>
+               </div>
+             ))
+          )}
+        </div>
       </div>
     </div>
+
   );
 };

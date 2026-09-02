@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { complaintService } from '../../services/complaintService';
 import type { Complaint } from '../../types/complaints';
-import { FileText, Search, Filter, ArrowUpDown } from 'lucide-react';
+import { FileText, Search, Filter, ArrowUpDown, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 type SortField = 'id' | 'date' | 'title' | 'status' | 'priority';
@@ -64,6 +64,26 @@ export const OfficerComplaintsLog = () => {
     });
   }, [complaints, searchTerm, sortField, sortDirection]);
 
+
+  const handleExport = () => {
+    const headers = ['ID', 'Date', 'Category', 'Title', 'Status', 'Priority Score', 'Location'];
+    const rows = processedComplaints.map(c => [
+      c.id,
+      new Date(c.dateReported).toLocaleDateString(),
+      c.category,
+      `"${(c.title || '').replace(/"/g, '""')}"`,
+      c.status,
+      c.aiAnalysis?.priorityScore || '0',
+      `"${(c.location || '').replace(/"/g, '""')}"`
+    ]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `civic_data_export.csv`;
+    link.click();
+  };
+
   const Th = ({ field, label }: { field: SortField, label: string }) => (
     <th 
       onClick={() => handleSort(field)} 
@@ -97,6 +117,11 @@ export const OfficerComplaintsLog = () => {
           <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm active:scale-95 cursor-pointer">
             <Filter className="w-4 h-4" /> Filter
           </button>
+
+          <button onClick={handleExport} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-800 transition-colors shadow-sm active:scale-95 cursor-pointer">
+            <Download className="w-4 h-4" /> Export CSV
+          </button>
+
         </div>
       </div>
 
