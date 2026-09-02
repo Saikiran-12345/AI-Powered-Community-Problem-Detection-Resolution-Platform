@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { complaintService } from '../../services/complaintService';
+import { complaintService } from '../services/complaintService';
 
 // Grid size configuration
 const GRID_COLS = 12;
