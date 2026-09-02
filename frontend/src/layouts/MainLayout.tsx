@@ -27,28 +27,28 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
+      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center text-white shadow-md">
             <Building2 className="w-5 h-5" />
           </div>
-          <span className="text-xl font-extrabold text-gray-900 tracking-tight">CivicAI</span>
+          <span className="text-xl font-extrabold text-white tracking-tight">CivicAI</span>
         </div>
         
         <div className="flex items-center gap-5">
           <div className="hidden md:block text-right">
-            <p className="text-sm font-bold text-gray-900">{user?.name}</p>
-            <p className="text-xs font-semibold text-primary-600 uppercase tracking-widest">{role}</p>
+            <p className="text-sm font-bold text-white">{user?.name}</p>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">{role}</p>
           </div>
-          <div className="w-10 h-10 rounded-full bg-primary-100 border border-primary-200 flex items-center justify-center text-primary-700 font-bold overflow-hidden ring-2 ring-white shadow-sm">
+          <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-white font-bold overflow-hidden ring-2 ring-slate-900 shadow-sm">
              {user?.name?.charAt(0).toUpperCase()}
           </div>
         </div>
       </header>
       
       <div className="flex-1 flex overflow-hidden">
-        <aside className="w-64 bg-white border-r border-gray-200 p-5 hidden md:flex flex-col overflow-y-auto">
+        <aside className="w-64 bg-white border-r border-slate-200 p-5 hidden md:flex flex-col overflow-y-auto shadow-sm relative z-10">
           <nav className="flex-1 space-y-2">
              <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Main Menu</div>
              
@@ -92,7 +92,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
           </div>
         </aside>
         
-        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-gray-50/50">
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto bg-slate-50">
           <div className="max-w-7xl mx-auto">
             <Outlet />
           </div>
