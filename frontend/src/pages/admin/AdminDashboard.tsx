@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { complaintService } from '../../services/complaintService';
-import { Complaint } from '../../types/complaints';
+import type { Complaint } from '../../types/complaints';
 import { BarChart3, Users, FileWarning, ShieldAlert } from 'lucide-react';
 
 export const AdminDashboard = () => {

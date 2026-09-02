@@ -13,7 +13,7 @@ export const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([
     { id: '1', title: 'AI Analysis Complete', message: 'Issue CIV-1024 has been prioritized.', isRead: false, time: '2m ago' },
-    { id: '2', title: 'System Alert', 'Local AI Model successfully loaded into memory.'', isRead: false, time: '1h ago' }
+    { id: '2', title: 'System Alert', message: 'Local AI Model successfully loaded into memory.', isRead: false, time: '1h ago' }
   ]);
 
   const unread = notifications.filter(n => !n.isRead).length;

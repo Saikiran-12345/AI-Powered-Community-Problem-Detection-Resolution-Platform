@@ -1,4 +1,4 @@
-import { Complaint } from '../../types/complaints';
+import type { Complaint } from '../../types/complaints';
 
 // Historical Dataset containing 2000 resolved community issues for AI trend analysis
 

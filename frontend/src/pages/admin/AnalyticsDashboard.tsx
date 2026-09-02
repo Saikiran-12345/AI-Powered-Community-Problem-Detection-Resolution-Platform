@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { analyticsService } from '../../services/analyticsService';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { PieChart as PieIcon, TrendingUp, Filter } from 'lucide-react';
+import { CommunityHeatmap } from '../../components/CommunityHeatmap';
 
 export const AnalyticsDashboard = () => {
   const categoryData = useMemo(() => analyticsService.getCategoryStats(), []);
@@ -78,6 +79,9 @@ export const AnalyticsDashboard = () => {
             </ResponsiveContainer>
           </div>
         </div>
+      </div>
+      <div className="mt-6">
+        <CommunityHeatmap />
       </div>
     </div>
   );

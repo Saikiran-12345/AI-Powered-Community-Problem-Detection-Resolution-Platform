@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { complaintService } from '../../services/complaintService';
-import { Complaint, ComplaintStatus } from '../../types/complaints';
+import type { Complaint, ComplaintStatus } from '../../types/complaints';
 import { ArrowLeft, Bot, MapPin, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 
 export const Investigation = () => {

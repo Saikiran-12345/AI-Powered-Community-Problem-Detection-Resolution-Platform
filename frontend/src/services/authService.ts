@@ -1,4 +1,4 @@
-import { User, Role } from '../types/auth';
+import type { User, Role } from '../types/auth';
 
 const USERS_KEY = 'civicai_users';
 const CURRENT_USER_KEY = 'civicai_current_user';

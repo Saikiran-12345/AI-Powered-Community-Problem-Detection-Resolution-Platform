@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { complaintService } from '../../services/complaintService';
-import { Complaint } from '../../types/complaints';
+import type { Complaint } from '../../types/complaints';
 import { ClipboardList, Flame, MapPin, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

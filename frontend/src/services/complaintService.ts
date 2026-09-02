@@ -1,4 +1,4 @@
-import { Complaint } from '../types/complaints';
+import type { Complaint } from '../types/complaints';
 
 const COMPLAINTS_KEY = 'civicai_complaints';
 

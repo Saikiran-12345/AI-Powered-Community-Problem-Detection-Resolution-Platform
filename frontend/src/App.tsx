@@ -17,6 +17,7 @@ import { OfficerDashboard } from './pages/officer/OfficerDashboard';
 import { Investigation } from './pages/officer/Investigation';
 
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AnalyticsDashboard } from './pages/admin/AnalyticsDashboard';
 
 const Landing = () => <Navigate to="/login" replace />;
 const NotFound = () => <div className="p-8 text-center font-bold text-2xl text-gray-900 mt-20">404 - Area Not Found</div>;
@@ -43,12 +44,14 @@ function App() {
           <Route path="/officer" element={<ProtectedRoute allowedRoles={['OFFICER', 'ADMIN']}><MainLayout role="OFFICER" /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<OfficerDashboard />} />
+            <Route path="analytics" element={<AnalyticsDashboard />} />
             <Route path="investigate/:id" element={<Investigation />} />
           </Route>
 
           <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><MainLayout role="ADMIN" /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="analytics" element={<AnalyticsDashboard />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

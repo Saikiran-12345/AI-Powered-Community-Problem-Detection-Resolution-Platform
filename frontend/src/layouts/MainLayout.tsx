@@ -40,16 +40,16 @@ const MainLayout: React.FC<MainLayoutProps> = ({ role }) => {
           <nav className="flex-1 space-y-1.5">
              <div className="px-3 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Main Menu</div>
              
-             <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold bg-primary-50 text-primary-700 rounded-xl">
+             <button onClick={() => navigate(`/${role.toLowerCase()}/dashboard`)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold bg-primary-50 text-primary-700 rounded-xl">
                 <LayoutDashboard className="w-4 h-4" /> Dashboard
-             </a>
+             </button>
              <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                 <FileText className="w-4 h-4" /> Complaints
              </a>
              {(role === 'ADMIN' || role === 'OFFICER') && (
-               <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
+               <button onClick={() => navigate(`/${role.toLowerCase()}/analytics`)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                   <BarChart3 className="w-4 h-4" /> Analytics
-               </a>
+               </button>
              )}
              {role === 'ADMIN' && (
                <a href="#" className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
