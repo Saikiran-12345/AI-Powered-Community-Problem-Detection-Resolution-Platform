@@ -14,6 +14,7 @@ import { CitizenDashboard } from './pages/citizen/CitizenDashboard';
 import { ReportProblem } from './pages/citizen/ReportProblem';
 
 import { OfficerDashboard } from './pages/officer/OfficerDashboard';
+import { OfficerComplaintsLog } from './pages/officer/OfficerComplaintsLog';
 import { Investigation } from './pages/officer/Investigation';
 
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/officer" element={<ProtectedRoute allowedRoles={['OFFICER', 'ADMIN']}><MainLayout role="OFFICER" /></ProtectedRoute>}>
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<OfficerDashboard />} />
+            <Route path="complaints" element={<OfficerComplaintsLog />} />
             <Route path="analytics" element={<AnalyticsDashboard />} />
             <Route path="investigate/:id" element={<Investigation />} />
           </Route>
