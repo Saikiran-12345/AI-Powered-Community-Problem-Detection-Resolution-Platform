@@ -28,20 +28,16 @@ export const ReportProblem = () => {
       ...formData
     });
 
-    // Simulate AI processing
-    setTimeout(() => {
-      const mockAiAnalysis = {
-        category: formData.category,
-        severity: 'HIGH',
-        priorityScore: 8.7,
-        recommendedDepartmentId: 'dept_1',
-        isDuplicate: false
-      };
-      
-      complaintService.updateAnalysis(complaint.id, mockAiAnalysis);
-      setAiResult({ complaintId: complaint.id, ...mockAiAnalysis });
+    // Call Local AI Engine via FastAPI
+    try {
+      const aiResponse = await complaintService.analyzeWithLocalAI(formData.title, formData.description);
+      complaintService.updateAnalysis(complaint.id, aiResponse);
+      setAiResult({ complaintId: complaint.id, ...aiResponse });
+    } catch (e) {
+      console.error(e);
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   if (aiResult) {
