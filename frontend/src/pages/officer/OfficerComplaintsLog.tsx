@@ -10,14 +10,24 @@ export const OfficerComplaintsLog = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const all = complaintService.getAll();
-    setComplaints(all.sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime()).slice(0, 100)); // limit to 100 to prevent lag
+    try {
+      const all = complaintService.getAll() || [];
+      const sorted = all.sort((a, b) => {
+        const timeA = a.dateReported ? new Date(a.dateReported).getTime() : 0;
+        const timeB = b.dateReported ? new Date(b.dateReported).getTime() : 0;
+        return (timeB || 0) - (timeA || 0);
+      });
+      setComplaints(sorted.slice(0, 100)); // limit to 100 to prevent lag
+    } catch (e) {
+      console.error("Failed to load complaints:", e);
+      setComplaints([]);
+    }
   }, []);
 
   const filteredComplaints = complaints.filter(c => 
-    c.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    c.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.category.toLowerCase().includes(searchTerm.toLowerCase())
+    (c.title || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (c.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (c.category || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -38,7 +48,7 @@ export const OfficerComplaintsLog = () => {
               className="pl-9 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none text-sm w-full md:w-64 shadow-sm"
             />
           </div>
-          <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm active:scale-95">
+          <button className="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm active:scale-95 cursor-pointer">
             <Filter className="w-4 h-4" /> Filter
           </button>
         </div>
@@ -67,12 +77,14 @@ export const OfficerComplaintsLog = () => {
                 </tr>
               ) : (
                 filteredComplaints.map(c => (
-                  <tr key={c.id} className="hover:bg-gray-50 transition-colors group">
-                    <td className="py-4 px-6 text-sm font-bold text-gray-900">{c.id}</td>
-                    <td className="py-4 px-6 text-sm text-gray-500">{new Date(c.dateReported).toLocaleDateString()}</td>
+                  <tr key={c.id || Math.random().toString()} className="hover:bg-gray-50 transition-colors group">
+                    <td className="py-4 px-6 text-sm font-bold text-gray-900">{c.id || 'N/A'}</td>
+                    <td className="py-4 px-6 text-sm text-gray-500">
+                      {c.dateReported ? new Date(c.dateReported).toLocaleDateString() : 'Unknown'}
+                    </td>
                     <td className="py-4 px-6">
-                      <p className="text-sm font-bold text-gray-900">{c.title}</p>
-                      <p className="text-xs font-medium text-gray-500 mt-0.5">{c.category}</p>
+                      <p className="text-sm font-bold text-gray-900">{c.title || 'Untitled'}</p>
+                      <p className="text-xs font-medium text-gray-500 mt-0.5">{c.category || 'Uncategorized'}</p>
                     </td>
                     <td className="py-4 px-6">
                       <span className={`px-2.5 py-1 text-[10px] font-bold rounded-full uppercase tracking-wider ${
@@ -80,7 +92,7 @@ export const OfficerComplaintsLog = () => {
                         c.status === 'REJECTED' ? 'bg-gray-100 text-gray-600' : 
                         'bg-blue-100 text-blue-700'
                       }`}>
-                        {c.status.replace(/_/g, ' ')}
+                        {(c.status || 'UNKNOWN').replace(/_/g, ' ')}
                       </span>
                     </td>
                     <td className="py-4 px-6">
