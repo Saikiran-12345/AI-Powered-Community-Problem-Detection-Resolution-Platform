@@ -49,25 +49,25 @@ if (from) {
   };
 
   return (
-    <div className="p-6 sm:p-8">
-      <div className="flex justify-center mb-6">
-        <div className="bg-primary-50 p-3 rounded-2xl">
-          <Building2 className="w-8 h-8 text-primary-600" />
+    <div className="p-6">
+      <div className="flex justify-center mb-4">
+        <div className="bg-primary-50 p-2.5 rounded-2xl">
+          <Building2 className="w-6 h-6 text-primary-600" />
         </div>
       </div>
       
-      <div className="text-center mb-6">
+      <div className="text-center mb-5">
         <h1 className="text-xl font-bold text-gray-900 tracking-tight mb-2">Welcome to CivicAI</h1>
         <p className="text-gray-500 text-sm">Sign in to report or manage community infrastructure issues.</p>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
+        <div className="mb-4 p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl text-sm text-center font-medium">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
           <div className="relative">
@@ -108,13 +108,13 @@ if (from) {
         </button>
       </form>
 
-      <div className="mt-6 text-center">
+      <div className="mt-4 text-center">
         <p className="text-sm text-gray-500">
           Don't have an account? <Link to="/register" className="text-primary-600 font-semibold hover:underline">Register here</Link>
         </p>
       </div>
 
-      <div className="mt-6 pt-5 border-t border-gray-100">
+      <div className="mt-4 pt-4 border-t border-gray-100">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider text-center mb-4">1-Click Demo Login</p>
         <div className="grid grid-cols-3 gap-3">
           <button type="button" onClick={() => fillDemo('citizen@civic.local')} className="py-2 text-xs font-medium bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors border border-gray-200 active:scale-95">Citizen</button>
